@@ -123,4 +123,14 @@ Information regarding each component
             --> test: change T and N values
 
 -- attack_audit.py
-        --> <FILL IN>
+        --> Adversarial audit script. Attempts to fool monitor.py by forging and replaying heartbeats.
+            --> spoof: sends forged beats straight to the monitor so it reports the service healthy after a crash.
+            --> relay: forwards real beats, then auto-replays the last one once the service goes silent.
+            --> Success is shown by watching monitor.py: "OK" with no "ALERT" during the attack window.
+
+    Usage
+        python attack_audit.py spoof
+            --> Attack 1. Run after auth_service.py has crashed.
+        python attack_audit.py relay
+            --> Attack 2. Start before auth_service.py, then run:
+                python auth_service.py --monitor-port 9001
