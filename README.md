@@ -110,7 +110,17 @@ Information regarding each component
             --> FILL IN
 
 -- monitor.py
-        --> <FILL IN>
+        --> Heartbeat monitor. Runs as its own process and alerts when the service stops sending beats.
+            --> Prints "OK seq=<n>" for each beat.
+            --> Prints and logs "ALERT: auth service DOWN" after 1.5 s (N x T) with no beat.
+            --> Logs "RECOVERED" if beats resume.
+            --> Beats are not authenticated (intentional), so attack_audit.py can fool it.
+
+    Usage
+        python monitor.py
+            --> Run (start this first)
+        python monitor.py --interval 0.05 --misses 1
+            --> test: change T and N values
 
 -- attack_audit.py
         --> <FILL IN>
