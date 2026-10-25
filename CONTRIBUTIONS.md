@@ -6,6 +6,9 @@
 ## Monitor (monitor.py)
 - Makaela Maryanski: wrote the heartbeat monitor, including timeout detection (N x T), DOWN/RECOVERED alerts, timestamped logging, and handling of invalid packets
 
+## Attack (attack_audit.py)
+- Atlas Middleton: Wrote the adversarial audit script, including heartbeat spoofing, a relay-based replay attack, and handling of the attack timing against the monitor's detection window.
+
 ## Write-up
 - Adelle Ferris: Wrote up the README.md and full PDF report for the project report. 
 
