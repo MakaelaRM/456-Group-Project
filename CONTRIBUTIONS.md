@@ -10,7 +10,7 @@
 - Atlas Middleton: Wrote the adversarial audit script, including heartbeat spoofing, a relay-based replay attack, and handling of the attack timing against the monitor's detection window.
 
 ## Write-up
-- Adelle Ferris: Wrote up the README.md and full PDF report for the project report. 
+- Adelle Ferris: Wrote up the README.md and PDF report for the project report. 
 
 ## Individual Reflections
 - All teammates have completed their reflections seperately. 
