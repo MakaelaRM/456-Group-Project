@@ -5,7 +5,8 @@ How to run (start the monitor first, in its own terminal):
     python monitor.py
  
 Optional, to test other timing values (T = interval in seconds, N = missed beats):
-    python monitor.py --interval 0.05 --misses 1
+    python monitor.py --interval 0.5 --misses 1
+        --> interval must always match HEARTBEAT_INTERVAL_S in config.py, so changing it requires it to also be edited there.
  
 Then start the service in a second terminal:
     python auth_service.py
@@ -68,7 +69,7 @@ def main():
                     help="do not print an OK line for every beat")
     args = ap.parse_args()
 
-    T = args.interval
+    T = args.interval       # must match HEARTBEAT_INTERVAL_S in config.py
     N = args.misses
     timeout = N * T
 
