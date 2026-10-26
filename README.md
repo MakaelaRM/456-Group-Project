@@ -8,8 +8,8 @@ This assignment is for Colorado State University, Course CS-456, taught by Profe
 
 
 Purpose:
--- In this assignment, we are testing availability (of the CIA triad) through fault detection, one of the tactics deployed to maintain high availability (other tactics include disruption withstanding and operation recovery).
-        --> This group used an authentication service which crashes randomly, a heartbeat monitor to identify routine uptime and system failures, and an attack script that attempts to fool that monitor. This assignment covers fault detection, as it is a lightweight security service that simulates realistic, non-deterministic system failures and malfunctions. The monitoring agent identifies when downtimes occur and reports when the service is not working as expected. This can be useful to identify when a tool is not working as expected and allow for a quick response.
+-- In this assignment, we are testing availability (of the CIA triad) through fault detection, one of the tactics deployed to maintain high availability (other tactics include disruption withstanding and operation recovery). 
+        --> This group used an authentication service which crashes randomly, a Push-based UDP Heartbeat monitor to identify routine uptime and system failures, and an attack script that attempts to fool that monitor by spoofing the heartbeat and relaying and replaying the beats after it goes down. This assignment covers fault detection, as it is a lightweight security service that simulates realistic, non-deterministic system failures and malfunctions. The monitoring agent identifies when operational downtimes occur and reports when the service is not working as expected. This can be useful to identify when a tool is not working as expected and allow for a quick response. Additionally, understanding how monitoring and error detection protocols can be bypassed is important to prevent attacks from occuring and secure operational systems, as all fields use this type of technology. 
             --> *This script is for educational purposes only and should not be used for nefarious purposes*.
 
 
@@ -68,7 +68,7 @@ Instructions to Execute:
                 python auth_service.py --monitor-port 9001
             *Terminal 4*
                 python load_client.py
-                    --> After the crash, the relay will replay the last real beat and then the monitor will show "OK" with no "ALERT", which indicates success.
+                    --> After the crash, the relay resends the last real beat, so the monitor keeps showing "OK" and the sequence number, with no "ALERT", which indicates succes and that the crash cannot be seen from the monitor. 
 
 
 
