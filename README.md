@@ -129,9 +129,10 @@ Information regarding each component
             --> Send 30% malformed requests, so crashes occur more frequently.
 
 -- monitor.py
-        --> Heartbeat monitor. Runs as its own process and alerts when the service stops sending beats.
+        --> Heartbeat monitor and failover controller. Runs as its own process and alerts when the service stops sending beats.   <<
             --> Prints "OK seq=*n*" for each beat.
             --> Prints and logs "ALERT: auth service DOWN" after 1.5 s (N x T) with no beat.
+            --> Then kills the old primary if it is still serving, starts a standby, and logs "[Failover Triggered]" and "[Service Restored]" (with the MTTR).   <<
             --> Logs "RECOVERED" if beats resume.
             --> Beats are not authenticated (intentional), so attack_audit.py can fool it.
 
@@ -141,6 +142,17 @@ Information regarding each component
         python monitor.py --interval 0.5 --misses 1
             --> test: N = 1 and the timeout interval = 0.5 seconds
                 --> interval must always match HEARTBEAT_INTERVAL_S in config.py, so changing it requires it to also be edited there.
+        python monitor.py --no-fence   <<
+            --> baseline: do not kill the old primary   <<
+        python monitor.py --insecure-checkpoint   <<
+            --> baseline: the standby skips the checkpoint HMAC check   <<
+
+-- measure.py   <<
+        --> Crashes the primary on purpose to measure MTTR and lost logins. Stop all other terminals first.   <<
+
+    Usage   <<
+        python measure.py mttr --runs 15   <<
+        python measure.py lost --intervals 1 2 5 --runs 8   <<
 
 -- attack_audit.py
         --> Adversarial audit script. Attempts to fool monitor.py by forging and replaying heartbeats.

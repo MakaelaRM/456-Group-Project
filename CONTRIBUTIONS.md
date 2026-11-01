@@ -1,4 +1,4 @@
-# Contributions
+# Contributions Part 1
 
 ## Service (config.py, auth_service.py, load_client.py)
 - Isabella Sullivan: Wrote the auth service, crash injection, heartbeat sender, and load client.
@@ -14,3 +14,8 @@
 
 ## Individual Reflections
 - All teammates have completed their reflections seperately. 
+
+# Contributions Part 2
+
+## Monitor and measurements (monitor.py, measure.py)
+- Makaela Maryanski: updated the monitor into the failover controller (state machine, fencing, standby launch, [Crash Detected]/[Failover Triggered]/[Service Restored] logging) and wrote measure.py for MTTR and lost-update measurements
