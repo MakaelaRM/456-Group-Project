@@ -19,3 +19,6 @@
 
 ## Monitor and measurements (monitor.py, measure.py)
 - Makaela Maryanski: updated the monitor into the failover controller (state machine, fencing, standby launch, [Crash Detected]/[Failover Triggered]/[Service Restored] logging) and wrote measure.py for MTTR and lost-update measurements
+
+## Attack (attack_audit.py)
+- Atlas Middleton: Updated the attack audit script to perform the split brain and 

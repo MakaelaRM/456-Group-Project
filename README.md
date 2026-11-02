@@ -69,6 +69,39 @@ Instructions to Execute:
             *Terminal 4*
                 python load_client.py
                     --> After the crash, the relay resends the last real beat, so the monitor keeps showing "OK" and the sequence number, with no "ALERT", which indicates succes and that the crash cannot be seen from the monitor. 
+        4. Automated Failover (after Part 1 crash detection works)
+            *Terminal 1*
+                python monitor.py
+                    --> On ALERT, fences the old primary and launches a standby,
+                        logging [Crash Detected] -> [Failover Triggered] -> [Service Restored].
+            *Terminal 2*
+                python auth_service.py
+            *Terminal 3*
+                python load_client.py
+                    --> After a crash, VERIFY replies show whether a token survived
+                        ("VALID") or was lost ("INVALID ... STATE LOST").
+        5. Checkpoint Tampering Attack
+            *Terminal 1*
+                python monitor.py
+            *Terminal 2*
+                python auth_service.py --no-crash
+            *Terminal 3*
+                python load_client.py
+            *Terminal 4*
+                python attack_audit.py tamper --kill-primary
+                    --> Corrupts the checkpoint file and kills the primary immediately.
+                        Monitor/standby should log "checkpoint REJECTED: HMAC mismatch"
+                        and fall back to the last verified checkpoint.
+                python attack_audit.py tamper --restore
+        6. Split-Brain Attack
+            *Terminal 1*
+                python monitor.py
+            *Terminal 2*
+                python attack_audit.py split
+                    --> Drops real heartbeats for a window while the primary stays alive,
+                        to see if the monitor falsely declares it DOWN.
+            *Terminal 3*
+                python auth_service.py --monitor-port 9001
 
 
 
@@ -159,10 +192,20 @@ Information regarding each component
             --> spoof: sends forged beats straight to the monitor so it reports the service healthy after a crash.
             --> relay: forwards real beats, then auto-replays the last one once the service goes silent.
             --> Success is shown by watching monitor.py: "OK" with no "ALERT" during the attack window.
-
+            --> split: drops real heartbeats for a window while the primary is alive, to try to trigger a false failover / split-brain.
+            --> tamper: corrupts the checkpoint file on disk to test the standby's HMAC check and fallback.
     Usage
         python attack_audit.py spoof
             --> Attack 1: Run after auth_service.py has crashed.
         python attack_audit.py relay
             --> Attack 2: Start after monitor.py, before auth_service.py, then run:
                 --> python auth_service.py --monitor-port 9001
+        python attack_audit.py split
+            --> Attack 1: Start after monitor.py, but before auth_service.py, then run:
+                --> python auth_service.py --monitor-port 9001
+        python attack_audit.py tamper --kill-primary
+            --> Attack 2: Run while monitor.py and auth_service.py are up and a
+                checkpoint has been written. Corrupts the checkpoint and kills
+                the primary.
+        python attack_audit.py tamper --restore
+            --> Restores the original checkpoint afterward.
